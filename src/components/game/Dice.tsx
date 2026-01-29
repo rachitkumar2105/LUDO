@@ -62,15 +62,15 @@ export const Dice: React.FC<DiceProps> = ({
       className={cn(
         'relative w-20 h-20 rounded-2xl cursor-pointer transition-all duration-200',
         'bg-gradient-to-br from-white to-gray-100',
-        'shadow-lg hover:shadow-xl',
+        'shadow-lg hover:shadow-xl border border-gray-300',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         isRolling && 'dice-rolling',
         canRoll && !disabled && 'hover:scale-105 active:scale-95'
       )}
       style={{
-        boxShadow: canRoll && !disabled 
-          ? '0 4px 20px rgba(0,0,0,0.3), 0 0 40px rgba(139, 92, 246, 0.3)' 
-          : '0 4px 20px rgba(0,0,0,0.3)',
+        boxShadow: canRoll && !disabled
+          ? '0 4px 20px rgba(0,0,0,0.3), 0 0 20px rgba(255, 215, 0, 0.5)'
+          : '0 4px 10px rgba(0,0,0,0.2)',
       }}
       whileTap={canRoll && !disabled ? { scale: 0.95 } : {}}
       animate={isRolling ? {
@@ -81,10 +81,10 @@ export const Dice: React.FC<DiceProps> = ({
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
       {/* Dice face */}
-      <div className="absolute inset-1 rounded-xl bg-gradient-to-br from-white to-gray-50 flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-1 rounded-xl bg-white flex items-center justify-center overflow-hidden border border-gray-100">
         {/* 3D edge effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent" />
-        
+        <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-transparent" />
+
         {/* Dots */}
         <AnimatePresence mode="wait">
           {!isRolling && value > 0 && (
@@ -102,12 +102,12 @@ export const Dice: React.FC<DiceProps> = ({
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: index * 0.05, duration: 0.2 }}
-                  className="absolute w-3 h-3 rounded-full bg-gray-800"
+                  className="absolute w-3 h-3 rounded-full bg-black"
                   style={{
                     left: `${dot.x}%`,
                     top: `${dot.y}%`,
                     transform: 'translate(-50%, -50%)',
-                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)',
+                    boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.5)',
                   }}
                 />
               ))}
@@ -120,7 +120,7 @@ export const Dice: React.FC<DiceProps> = ({
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 0.3, repeat: Infinity, ease: 'linear' }}
-            className="w-8 h-8 border-2 border-gray-300 border-t-gray-600 rounded-full"
+            className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full"
           />
         )}
 
@@ -129,9 +129,9 @@ export const Dice: React.FC<DiceProps> = ({
           <motion.span
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="text-xs font-medium text-gray-500"
+            className="text-xs font-bold text-gray-400"
           >
-            TAP
+            ROLL
           </motion.span>
         )}
       </div>
@@ -141,7 +141,7 @@ export const Dice: React.FC<DiceProps> = ({
         <motion.div
           className="absolute -inset-2 rounded-3xl pointer-events-none"
           style={{
-            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%)',
           }}
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 1.5, repeat: Infinity }}
