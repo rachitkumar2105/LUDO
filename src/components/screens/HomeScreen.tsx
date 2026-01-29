@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 export const HomeScreen: React.FC = () => {
   const { initializeGame } = useGameStore();
-  
+
   const [step, setStep] = useState<'mode' | 'players' | 'difficulty'>('mode');
   const [gameMode, setGameMode] = useState<GameMode>('local');
   const [playerCount, setPlayerCount] = useState(2);
@@ -160,15 +160,14 @@ export const HomeScreen: React.FC = () => {
                       color === 'blue' && 'bg-blue-500'
                     )}
                     style={{
-                      boxShadow: `0 0 15px ${
-                        color === 'red'
+                      boxShadow: `0 0 15px ${color === 'red'
                           ? 'rgba(239, 68, 68, 0.5)'
                           : color === 'green'
-                          ? 'rgba(34, 197, 94, 0.5)'
-                          : color === 'yellow'
-                          ? 'rgba(234, 179, 8, 0.5)'
-                          : 'rgba(59, 130, 246, 0.5)'
-                      }`,
+                            ? 'rgba(34, 197, 94, 0.5)'
+                            : color === 'yellow'
+                              ? 'rgba(234, 179, 8, 0.5)'
+                              : 'rgba(59, 130, 246, 0.5)'
+                        }`,
                     }}
                   />
                 ))}
@@ -212,17 +211,7 @@ export const HomeScreen: React.FC = () => {
         )}
       </div>
 
-      {/* Footer */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="absolute bottom-8 text-center"
-      >
-        <p className="text-xs text-muted-foreground">
-          Made with ❤️ using React
-        </p>
-      </motion.div>
+
     </motion.div>
   );
 };
