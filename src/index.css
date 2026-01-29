@@ -4,22 +4,25 @@
 
 @layer base {
   :root {
-    /* Background - Classic Blue Pattern style */
-    --background: 210 50% 20%; /* Fallback blue */
+    /* Background - Realistic Ludo Pattern */
+    /* Using a complex repeating radial/linear gradient to mimic the geometric pattern in the image */
+    --background: 215 50% 20%;
     --foreground: 0 0% 100%;
 
     /* Board specifics */
     --board-bg: 0 0% 100%;
-    
-    /* Classic Player Colors */
-    --player-green: 142 76% 36%;  /* #16a34a */
-    --player-yellow: 48 96% 53%;  /* #eab308 */
-    --player-red: 0 72% 51%;      /* #dc2626 */
-    --player-blue: 217 91% 60%;   /* #3b82f6 */
 
-    /* Safe Zones / Star Cells */
-    --safe-cell: 0 0% 90%;
-    
+    /* Classic Player Colors - Vibrant and Glossy */
+    /* Reduced brightness slightly for 'print' look, but kept vibrant */
+    --player-green: 142 76% 36%;
+    /* #16a34a */
+    --player-yellow: 48 96% 53%;
+    /* #eab308 */
+    --player-red: 0 72% 51%;
+    /* #dc2626 */
+    --player-blue: 217 91% 60%;
+    /* #3b82f6 */
+
     /* UI Elements */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -46,32 +49,57 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
-    /* Add a subtle pattern if possible, for now just a gradient */
-    background: radial-gradient(circle at center, #1e3a8a 0%, #172554 100%);
+
+    /* Complex patterned background to match the reference */
+    background-color: #0f172a;
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+      repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 2px, transparent 2px, transparent 40px);
+    background-attachment: fixed;
   }
 }
 
 @layer utilities {
-  /* 3D Button / Cell Effects */
-  .cell-shadow {
-    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
-  }
-  
-  .piece-shadow {
-    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+
+  /* Realistic Board Effects */
+  .board-shadow {
+    box-shadow:
+      0 0 0 10px rgba(0, 0, 0, 0.2),
+      /* Outline shadow */
+      0 20px 50px rgba(0, 0, 0, 0.5);
+    /* Deep drop shadow */
   }
 
-  /* Specific Home Base Gradients */
-  .home-green-bg { background-color: white; border: 1.5rem solid hsl(var(--player-green)); }
-  .home-yellow-bg { background-color: white; border: 1.5rem solid hsl(var(--player-yellow)); }
-  .home-red-bg { background-color: white; border: 1.5rem solid hsl(var(--player-red)); }
-  .home-blue-bg { background-color: white; border: 1.5rem solid hsl(var(--player-blue)); }
+  .home-base-pattern {
+    /* Subtle inner shadow for depth */
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+  }
 
-  /* Arrow indicators */
-  .arrow-indicator {
-    clip-path: polygon(0 40%, 60% 40%, 60% 0, 100% 50%, 60% 100%, 60% 60%, 0 60%);
+  /* 3D Glass/Plastic Effect for Pieces */
+  .piece-gloss {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 100%);
+  }
+
+  /* Dice UI Panel */
+  .dice-panel {
+    background: linear-gradient(to bottom, #475569, #1e293b);
+    border: 2px solid #94a3b8;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* Text Stroke for Visibility */
+  .text-stroke {
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Star Safe Zone */
+  .star-safe-zone {
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
   }
 }

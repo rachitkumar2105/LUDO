@@ -115,9 +115,10 @@ export const GameBoard: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full max-w-[500px] mx-auto p-4">
+    <div className="relative w-full max-w-[500px] mx-auto p-4 flex flex-col items-center">
+
       {/* Board Aspect Ratio Container */}
-      <div className="relative w-full pb-[100%] bg-white shadow-2xl rounded-sm overflow-hidden border-4 border-slate-800">
+      <div className="relative w-full pb-[100%] bg-white rounded-lg overflow-hidden board-shadow border-[6px] border-[#1e293b]">
 
         {/* Main Grid */}
         <div
@@ -137,10 +138,11 @@ export const GameBoard: React.FC = () => {
 
             const startColor = getStartColor(row, col);
             const isSafe = isSafeCell(row, col);
-            const arrowProps = getArrowProps(row, col); // Not really used in standard ludo but good for start
 
+            // "Classic" path color is white with a thin border. 
+            // Start cells are colored.
             const cellColorClass = startColor
-              ? `bg-[hsl(var(--player-${startColor}))] border-slate-300` // Start cells are colored
+              ? `bg-[hsl(var(--player-${startColor}))] border-slate-400` // Start cells are colored
               : getCellColor(cellType);
 
             const tokens = tokenPositions.get(`${row}-${col}`) || [];
@@ -151,18 +153,18 @@ export const GameBoard: React.FC = () => {
                 className={cn(
                   'relative border box-border flex items-center justify-center',
                   cellColorClass,
-                  // Center specific styling handled separately or by cellType
+                  // Center triangle area handled by overlay
                 )}
               >
                 {/* Safe Spot Star */}
-                {isSafe && !startColor && (
-                  <Star className="w-full h-full p-1 text-slate-400 opacity-50" fill="currentColor" />
+                {isSafe && !startColor && cellType !== 'center' && (
+                  <Star className="w-[80%] h-[80%] text-slate-300 star-safe-zone" fill="currentColor" strokeWidth={1} />
                 )}
 
                 {/* Start Spot Arrow/Icon */}
                 {startColor && (
                   <ArrowRight className={cn(
-                    "w-full h-full p-1 text-slate-100 opacity-80",
+                    "w-[80%] h-[80%] text-white opacity-90 drop-shadow-md",
                     startColor === 'red' && "rotate-0",
                     startColor === 'green' && "rotate-90",
                     startColor === 'yellow' && "rotate-180",
@@ -178,11 +180,18 @@ export const GameBoard: React.FC = () => {
                   )}>
                     {tokens.map((token, i) => (
                       <div key={token.id} className={cn(
-                        "transition-all duration-300",
-                        tokens.length > 1 && i === 0 && "-translate-x-1 -translate-y-1",
-                        tokens.length > 1 && i === 1 && "translate-x-1 translate-y-1",
-                        tokens.length > 1 && i === 2 && "-translate-x-1 translate-y-1",
-                        tokens.length > 1 && i === 3 && "translate-x-1 -translate-y-1",
+                        "transition-all duration-300 absolute",
+                        tokens.length === 2 && i === 0 && "-translate-x-1.5 -translate-y-1.5",
+                        tokens.length === 2 && i === 1 && "translate-x-1.5 translate-y-1.5",
+                        // 3 tokens
+                        tokens.length === 3 && i === 0 && "-translate-y-2",
+                        tokens.length === 3 && i === 1 && "translate-x-2 translate-y-1",
+                        tokens.length === 3 && i === 2 && "-translate-x-2 translate-y-1",
+                        // 4 tokens
+                        tokens.length >= 4 && i === 0 && "-translate-x-1.5 -translate-y-1.5",
+                        tokens.length >= 4 && i === 1 && "translate-x-1.5 -translate-y-1.5",
+                        tokens.length >= 4 && i === 2 && "-translate-x-1.5 translate-y-1.5",
+                        tokens.length >= 4 && i === 3 && "translate-x-1.5 translate-y-1.5",
                       )}>
                         <Token
                           token={token}
@@ -194,21 +203,16 @@ export const GameBoard: React.FC = () => {
                     ))}
                   </div>
                 )}
-
-                {/* Clickable area for empty valid moves (optional visual cue) */}
-                {tokens.length === 0 && validMoves.length > 0 && cellType !== 'center' && (
-                  // We can add a specialized highlight if a move lands here, etc.
-                  // For now, keep clean.
-                  null
-                )}
-
               </div>
             );
           })}
         </div>
 
-        {/* Center Triangles Layer */}
-        <div className="absolute top-[40%] left-[40%] w-[20%] h-[20%]">
+        {/* Center Triangles Layer - Vibrant */}
+        <div className="absolute top-[40%] left-[40%] w-[20%] h-[20%] z-0">
+          {/* Center White Box Background */}
+          <div className="absolute inset-0 bg-white" />
+
           {/* Green Triangle (Left) */}
           <div className="absolute top-0 left-0 w-full h-full clip-path-polygon-[0_0,50%_50%,0_100%] bg-[hsl(var(--player-green))] z-0"
             style={{ clipPath: 'polygon(0 0, 50% 50%, 0 100%)', backgroundColor: 'hsl(var(--player-green))' }} />
@@ -223,11 +227,11 @@ export const GameBoard: React.FC = () => {
             style={{ clipPath: 'polygon(0 100%, 100% 100%, 50% 50%)', backgroundColor: 'hsl(var(--player-red))' }} />
         </div>
 
-        {/* Start Bases */}
-        <HomeBase color="green" position="top-left" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} />
-        <HomeBase color="yellow" position="top-right" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} />
-        <HomeBase color="red" position="bottom-left" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} />
-        <HomeBase color="blue" position="bottom-right" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} />
+        {/* Start Bases with Realistic Design */}
+        <HomeBase color="green" position="top-left" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} label="Computer 2" />
+        <HomeBase color="yellow" position="top-right" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} label="Computer 3" />
+        <HomeBase color="red" position="bottom-left" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} label="You" />
+        <HomeBase color="blue" position="bottom-right" tokenPositions={tokenPositions} onTokenClick={handleTokenClick} validMoves={validMoves} label="Computer 4" />
 
       </div>
     </div>
@@ -240,38 +244,26 @@ interface HomeBaseProps {
   tokenPositions: Map<string, TokenType[]>;
   onTokenClick: (token: TokenType) => void;
   validMoves: string[];
+  label: string;
 }
 
-const HomeBase: React.FC<HomeBaseProps> = ({ color, position, tokenPositions, onTokenClick, validMoves }) => {
+const HomeBase: React.FC<HomeBaseProps> = ({ color, position, tokenPositions, onTokenClick, validMoves, label }) => {
   const baseClasses = {
-    'top-left': 'top-0 left-0 border-r-4 border-b-4 border-slate-800',
-    'top-right': 'top-0 right-0 border-l-4 border-b-4 border-slate-800',
-    'bottom-left': 'bottom-0 left-0 border-r-4 border-t-4 border-slate-800',
-    'bottom-right': 'bottom-0 right-0 border-l-4 border-t-4 border-slate-800',
+    'top-left': 'top-0 left-0 border-r border-b border-slate-400',
+    'top-right': 'top-0 right-0 border-l border-b border-slate-400',
+    'bottom-left': 'bottom-0 left-0 border-r border-t border-slate-400',
+    'bottom-right': 'bottom-0 right-0 border-l border-t border-slate-400',
   };
 
   const bgClass = {
-    red: 'home-red-bg',
-    green: 'home-green-bg',
-    yellow: 'home-yellow-bg',
-    blue: 'home-blue-bg',
+    red: 'bg-[hsl(var(--player-red))]',
+    green: 'bg-[hsl(var(--player-green))]',
+    yellow: 'bg-[hsl(var(--player-yellow))]',
+    blue: 'bg-[hsl(var(--player-blue))]',
   }[color];
 
-  // Manual mapping of internal 4 spots for the home base (0-3)
-  // We need to know which tokens are AT home.
-  // The GameLogic usually assigns a "position" -1 for home? 
-  // Or do we rely on `token.isHome`?
-  // `tokenPositions` map uses "row-col". We need the correct coords for the grid inside the base.
-  // Let's grab all tokens of this color that are `isHome`.
-
-  // Actually, `tokenPositions` already maps them to coordinates based on `getHomeBaseCoordinates`.
-  // So we just need to render the 4 white circles and check if tokens exist there.
-
-  // Coordinates in the 15x15 grid for the 4 home spots:
-  // Green (TL): (2,2), (2,3), (3,2), (3,3)
-  // Yellow (TR): (2,11), (2,12), (3,11), (3,12)
-  // Red (BL): (11,2), (11,3), (12,2), (12,3)
-  // Blue (BR): (11,11), (11,12), (12,11), (12,12)
+  // Text color usually white for contrast against the colored base
+  const labelColor = 'text-white';
 
   const getSpotCoords = (index: number) => {
     switch (color) {
@@ -285,22 +277,37 @@ const HomeBase: React.FC<HomeBaseProps> = ({ color, position, tokenPositions, on
 
   return (
     <div className={cn("absolute w-[40%] h-[40%]", baseClasses[position], bgClass)}>
-      {/* Inner white container for the 4 circles */}
-      <div className="absolute inset-0 bg-white m-[20%] rounded-2xl shadow-inner flex flex-wrap p-2 gap-2 content-center justify-center">
+      {/* Label */}
+      <div className={cn("absolute w-full text-center font-bold text-sm tracking-wide z-20 text-stroke drop-shadow-md", labelColor,
+        position.includes('bottom') ? 'bottom-2' : 'top-2'
+      )}>
+        {label}
+      </div>
+
+      {/* Inner white container for the 4 circles - Realism: This is a white box inside the color */}
+      <div className="absolute inset-[15%] bg-white rounded-lg shadow-inner flex flex-wrap p-2 gap-2 content-center justify-center home-base-pattern">
         {/* Render 4 spots */}
         {[0, 1, 2, 3].map(i => {
           const [r, c] = getSpotCoords(i);
           const tokens = tokenPositions.get(`${r}-${c}`) || [];
 
           return (
-            <div key={i} className="w-[35%] h-[35%] rounded-full bg-slate-100 border border-slate-300 relative flex items-center justify-center shadow-inner">
+            <div key={i} className={cn(
+              "w-[35%] h-[35%] rounded-full relative flex items-center justify-center shadow-inner border-2",
+              // The circle inside the white box is usually colored the same as the player
+              bgClass.replace('bg-', 'border-').replace(']', '/30]')
+            )}>
+              {/* Colored Circle Fill */}
+              <div className={cn("w-[70%] h-[70%] rounded-full opacity-30", bgClass)} />
+
               {tokens.map(token => (
-                <Token
-                  key={token.id}
-                  token={token}
-                  isValidMove={validMoves.includes(token.id)}
-                  onClick={() => onTokenClick(token)}
-                />
+                <div key={token.id} className="absolute inset-0 flex items-center justify-center">
+                  <Token
+                    token={token}
+                    isValidMove={validMoves.includes(token.id)}
+                    onClick={() => onTokenClick(token)}
+                  />
+                </div>
               ))}
             </div>
           );
